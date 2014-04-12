@@ -9,7 +9,6 @@
 * License: GPL
 */
 
-
 function os_sincelastvisit_comment_class($classes){
 
 	if ( !isset($_COOKIE['lastvisit']) || (isset($_COOKIE['lastvisit']) && $_COOKIE['lastvisit'] != '') ) {
@@ -26,3 +25,11 @@ function os_sincelastvisit_comment_class($classes){
 	return $classes;
 }
 add_filter( 'comment_class', 'os_sincelastvisit_comment_class' );
+
+function os_sincelastvisit_set_cookie() {
+	if ( is_admin() ) return;
+
+	$current = current_time( 'timestamp', 1);
+	setcookie( 'lastvisit', $current, strtotime( '+60 days' ), $_SERVER['REQUEST_URI'] );
+}
+add_action( 'init', 'os_sincelastvisit_set_cookie' );
